@@ -1,0 +1,24 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{{ titlePage }}</title>
+    <link rel="stylesheet" media="all" href="style.css"/>
+</head>
+<body>
+<div id="page" class="page">
+    <header id="header" class="header" role="banner">
+        <h1>Evanre's sandbox</h1>
+    </header>
+    <main class="main" role="main">
+        {% block content %} {% endblock %}
+    </main>
+    <footer id="footer" class="footer" role="contentinfo">
+        <p>Some creds may go here</p>
+    </footer>
+</div>
+<script src="script.njk"></script>
+</body>
+</html>
