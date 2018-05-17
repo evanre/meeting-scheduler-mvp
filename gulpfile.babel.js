@@ -1,14 +1,18 @@
 import gulp from 'gulp';
 import browser from 'browser-sync';
-// import {argv} from 'yargs';
-import lorem from 'lorem-ipsum';
 import fs from 'fs';
 import notify from 'gulp-notify';
 import plumber from 'gulp-plumber';
+
 import nunjucksRender from 'gulp-nunjucks-render';
-// import injectString from 'gulp-injectString';
+import lorem from 'lorem-ipsum';
+
 import sass from 'gulp-sass';
-import babel from 'gulp-babel';
+
+import browserify from 'browserify';
+import babelify from 'babelify';
+import source from 'vinyl-source-stream';
+import buffer from 'vinyl-buffer';
 
 // -----------------------------------------------------------------------------
 // Configuration
@@ -57,7 +61,7 @@ const njkEnvironment = (env) => {
         return mergeDeep(defaults, options);
     });
 
-    env.addGlobal('data', JSON.parse(fs.readFileSync('src/njk/helpers/data.json').toString()));
+    // env.addGlobal('data', JSON.parse(fs.readFileSync('src/njk/helpers/data.json').toString()));
 
     env.addFilter('slug', str => str && str.replace(/\s/g, '-', str).toLowerCase());
 
@@ -107,11 +111,17 @@ const scss = () => gulp.src('src/scss/style.scss')
     .pipe(gulp.dest('build/'))
     .pipe(browser.stream());
 
-const js = () => gulp.src('src/js/script.js')
-        .pipe(babel({
-            presets: ['env']
-        }))
-        .pipe(gulp.dest('build/'));
+const js = () => browserify('src/js/script.js')
+    .transform('babelify', {presets: ['env']})
+    .bundle()
+    .on('error', notify.onError({
+        message: '\nmessage:<%= error.message %>\nfileName:<%= error.fileName %>',
+        //'error' object contains: name, message, stack ,fileName, plugin, showProperties, showStack properties
+        sound: 'Submarine'
+    }))
+    .pipe(source('script.js'))
+    .pipe(buffer())
+    .pipe(gulp.dest('build/'));
 
 // Copy and compress img
 const img = () => gulp.src('src/img/**/*')
