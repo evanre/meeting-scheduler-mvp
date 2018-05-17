@@ -10,3 +10,4 @@ temp/
 .templates
 .download
 bower_components
+package-lock.json
