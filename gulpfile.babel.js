@@ -5,6 +5,7 @@ import plumber from 'gulp-plumber';
 
 import nunjucksRender from 'gulp-nunjucks-render';
 import lorem from 'lorem-ipsum';
+import deepmerge from 'deepmerge';
 
 import sass from 'gulp-sass';
 
@@ -18,7 +19,7 @@ import buffer from 'vinyl-buffer';
 // -----------------------------------------------------------------------------
 const njkEnvironment = (env) => {
     env.addGlobal('lorem', (count = '10', units = 'sentences', makeSentence = false, sentenceLowerBound = 5, sentenceUpperBound = 15, format = 'html') => {
-        const capitalize = str => str.charAt(0).toUpperCase() + str.slice(1);
+        const capitalize = (str) => str.charAt(0).toUpperCase() + str.slice(1);
         const str = lorem({
             // More options here: https://www.npmjs.com/package/lorem-ipsum
             count, // Number of words, sentences, or paragraphs to generate.
@@ -30,52 +31,23 @@ const njkEnvironment = (env) => {
         return units === 'words' && makeSentence ? `${capitalize(str)}.` : str;
     });
 
-    env.addGlobal('merge', (defaults, options) => {
-        const isObject = item => item && typeof item === 'object' && !Array.isArray(item);
-
-        const mergeDeep = (target, src) => {
-            const output = Object.assign({}, target);
-            if (isObject(target) && isObject(src)) {
-                Object.keys(src)
-                    .forEach((key) => {
-                        if (isObject(src[key])) {
-                            if (!(key in target)) {
-                                Object.assign(output, { [key]: src[key] });
-                            } else {
-                                output[key] = mergeDeep(target[key], src[key]);
-                            }
-                        } else {
-                            if (src[key] !== null) {
-                                Object.assign(output, { [key]: src[key] });
-                            } else {
-                                delete output[key];
-                            }
-                        }
-                    });
-            }
-
-            return output;
-        };
-
-        return mergeDeep(defaults, options);
-    });
+    env.addGlobal('merge', (x = {}, y = {}) => deepmerge(x, y, { arrayMerge: (dest, src) => src }));
 
     // env.addGlobal('data', JSON.parse(fs.readFileSync('src/njk/helpers/data.json').toString()));
 
-    env.addFilter('slug', str => str && str.replace(/\s/g, '-', str).toLowerCase());
+    env.addFilter('debug', (str) => console.log('[DEBUG_NJK]:', str));
 
-    env.addFilter('debug', str => console.log('[DEBUG_NJK]:', str));
+    env.addFilter('interpolate', (str) => env.renderString(str));
 
-    env.addFilter('interpolate', str => env.renderString(str));
-
-    env.addFilter('unique', str => `${str}-${Math.random() * 0xffffff | 0}`);
+    env.addFilter('unique', (str) => `${str}-${Math.random() * 0xffffff | 0}`);
 };
 
 function errorHandler(...args) {
     notify.onError({
         title: '<%= error.plugin %>',
         message: '\nmessage:<%= error.message %>\nfileName:<%= error.fileName %>',
-        // 'error' object contains: name, message, stack ,fileName, plugin, showProperties, showStack properties
+        // 'error' object contains: name, message, stack,
+        // fileName, plugin, showProperties, showStack properties
         sound: 'Submarine',
     })
         .apply(this, Array.prototype.slice.call(args));
@@ -107,11 +79,12 @@ const scss = () => gulp.src('src/scss/style.scss')
     .pipe(browser.stream());
 
 const js = () => browserify('src/js/script.js')
-    .transform('babelify', { presets: ['env'] })
+    .transform('babelify', { presets: ['@babel/env'] })
     .bundle()
     .on('error', notify.onError({
         message: '\nmessage:<%= error.message %>\nfileName:<%= error.fileName %>',
-        // 'error' object contains: name, message, stack ,fileName, plugin, showProperties, showStack properties
+        // 'error' object contains: name, message, stack,
+        // fileName, plugin, showProperties, showStack properties
         sound: 'Submarine',
     }))
     .pipe(source('script.js'))
@@ -128,7 +101,9 @@ const server = (done) => {
         server: 'build/',
         port: 3002,
         watchOptions: {
-            debounceDelay: 500, // This introduces a small delay when watching for file change events to avoid triggering too many reloads
+            // This introduces a small delay when watching for file change events
+            // to avoid triggering too many reloads
+            debounceDelay: 500,
         },
     });
     done();
