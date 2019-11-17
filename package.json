@@ -43,6 +43,8 @@
   "yargs": "^13.2.4"
  },
  "dependencies": {
-  "materialize-css": "^1.0.0-rc.2"
+  "flatpickr": "^4.6.3",
+  "materialize-css": "^1.0.0-rc.2",
+  "node-normalize-scss": "^8.0.1"
  }
 }

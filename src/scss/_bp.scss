@@ -1,0 +1,80 @@
+$breakpoints: (
+    xsmall: 0,
+    small: 480px,
+    medium: 768px,
+    large: 1280px,
+) !default;
+
+@function to-list($value) {
+    @return if(type-of($value) != list, ($value,), $value);
+}
+
+@function map-next($map, $key) {
+    $values: map-keys($map);
+    $i: 0;
+    @if (map-has-key($map, $key)) {
+        $i: index($values, $key) + 1;
+    }
+    @if ($i > length($map) or $i == 0) {
+        @return null;
+    } @else {
+        @return map-get($map, nth($values, $i));
+    }
+}
+
+@mixin breakpoint($request) {
+    @if nth(map-values($breakpoints), 1) != 0 {
+        @error 'Your smallest breakpoint (defined in $breakpoints) must be set to "0".';
+    }
+    $request: to-list($request);
+    $size: nth($request, 1);
+    $state: if(length($request) == 2, nth($request, 2), up);
+    @if not index( (only, down, up), $state) {
+        @error 'No such state: #{$state}';
+        $state: 'up';
+    }
+    $bp: 0;
+    @if map-has-key($breakpoints, $size) {
+        $bp: map-get($breakpoints, $size);
+    } @else {
+        @error 'No such breakpoint!';
+    }
+
+    $bp2: map-next($breakpoints, $size);
+    $edge-values: if($bp == 0 or $bp2 == null, true, false);
+
+    @if $bp == 0 { // if smallest
+        @if $state == only or $state == down { // xsmall, only
+            @media screen and (max-width: $bp2 - 1) {
+                @content;
+            }
+        } @else {
+            @content;
+        }
+    }
+
+    @if $bp2 == null { // if largest
+        @if $state == down {
+            @content;
+        } @else {
+            @media screen and (min-width: $bp) {
+                @content;
+            }
+        }
+    }
+
+    @if $state == down and not $edge-values { // Any bp, and down
+        @media screen and (max-width: $bp2 - 1) {
+            @content;
+        }
+    } @else if $state == only and not $edge-values { // Any bp, and only
+        @media screen and (min-width: $bp) and (max-width: $bp2 - 1) {
+            @content;
+        }
+    } @else if not $edge-values { // Any bp, and up
+        @media screen and (min-width: $bp) {
+            @content;
+        }
+    }
+
+}
