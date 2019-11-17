@@ -1,9 +1,17 @@
 {
-    "extends": "airbnb-base",
+    "extends": [
+        "airbnb-base"
+    ],
     "rules": {
         "indent": ["error", 4],
         "import/no-extraneous-dependencies": "off",
         "no-bitwise": ["error", { "int32Hint": true }],
-        "no-console": "off"
+        "max-len": ["error", { "code": 160 }],
+        "no-console": "off",
+        "no-unused-vars": "off"
+    },
+    "env": {
+        "browser": true,
+        "node": true
     }
 }

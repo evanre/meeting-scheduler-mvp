@@ -9,15 +9,19 @@
 </head>
 <body>
 <div id="page" class="page">
-    <header id="header" class="header" role="banner">
-        <h1>Evanre's sandbox</h1>
-    </header>
+    {% block header %}
+        <header id="header" class="header" role="banner">
+            <h1>Evanre's sandbox</h1>
+        </header>
+    {% endblock %}
     <main class="main" role="main">
         {% block content %} {% endblock %}
     </main>
-    <footer id="footer" class="footer" role="contentinfo">
-        <p>Some creds may go here</p>
-    </footer>
+    {% block footer %}
+        <footer id="footer" class="footer" role="contentinfo">
+            <p>Some creds may go here</p>
+        </footer>
+    {% endblock %}
 </div>
 <script src="script.js"></script>
 </body>

@@ -19,6 +19,7 @@
             }
         ],
         "selector-class-pattern": "^((_|-){0,2}[a-z]+)*",
-        "at-rule-blacklist": null
+        "at-rule-blacklist": null,
+        "selector-max-compound-selectors": 10
     }
 }
