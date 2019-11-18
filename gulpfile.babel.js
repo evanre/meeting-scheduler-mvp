@@ -1,3 +1,4 @@
+import https from 'https';
 import gulp from 'gulp';
 import browser from 'browser-sync';
 import notify from 'gulp-notify';
@@ -34,6 +35,22 @@ const njkEnvironment = (env) => {
     env.addGlobal('merge', (x = {}, y = {}) => deepmerge(x, y, { arrayMerge: (dest, src) => src }));
 
     // env.addGlobal('data', JSON.parse(fs.readFileSync('src/njk/helpers/data.json').toString()));
+
+    env.addFilter('getUsers', (params, cb) => {
+        https.get(`https://randomuser.me/api/?exc=login,location&nat=au,ca,de,dk,fr,gb,us${params}`, (resp) => {
+            let data = '';
+
+            // A chunk of data has been recieved.
+            resp.on('data', (chunk) => {
+                data += chunk;
+            });
+
+            // The whole response has been received. Print out the result.
+            resp.on('end', () => cb(null, JSON.parse(data).results));
+        }).on('error', (err) => {
+            console.log(`Error: ${err.message}`);
+        });
+    }, true);
 
     env.addFilter('debug', (str) => console.log('[DEBUG_NJK]:', str));
 

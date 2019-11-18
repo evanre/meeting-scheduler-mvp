@@ -502,10 +502,14 @@ span.flatpickr-weekday {
     }
 
     &.today {
-        &:hover,
-        &:focus {
-            background: #959ea9;
-            color: #fff;
+        &::after {
+            bottom: -5px;
+            content: '.';
+            font-size: 28px;
+            left: 0;
+            position: absolute;
+            text-align: center;
+            width: 100%;
         }
     }
 

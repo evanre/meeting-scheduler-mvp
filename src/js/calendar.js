@@ -16,9 +16,9 @@ export default class Calendar {
                 (date) => (date.getDay() === 0 || date.getDay() === 6),
             ],
             monthSelectorType: 'static',
-            // locale: {
-            //     firstDayOfWeek: 1, // start week on Monday
-            // },
+            locale: {
+                firstDayOfWeek: 1, // start week on Monday
+            },
             minDate: 'today',
             maxDate: new Date().fp_incr(14), // 14 days from now
             onChange: (selectedDates, dateStr, instance) => {

@@ -4,9 +4,20 @@
 {% set titlePage = 'Index page' %}
 
 {% block content %}
-    <article id="content" class="section-main">
-        <form action="#">
-            <input type="hidden" class="calendar">
-        </form>
-    </article>
+    <section id="content" class="section-main">
+        <aside class="side-panel user-info">
+            {% set user = ('' | getUsers)[0] %}
+            {{ user | debug }}
+            <picture class="user-info__image">
+                <img src="{{ user.picture.large }}" alt="{{ user.name.first }} {{ user.name.last }}">
+            </picture>
+            <h2>{{ user.name.first }} {{ user.name.last }}</h2>
+            <p>Front-End Engineer intro call</p>
+        </aside>
+        <div class="main-panel">
+            <form action="#">
+                <input type="hidden" class="calendar">
+            </form>
+        </div>
+    </section>
 {% endblock %}
