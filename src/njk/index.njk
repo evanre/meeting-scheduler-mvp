@@ -4,20 +4,18 @@
 {% set titlePage = 'Index page' %}
 
 {% block content %}
-    <section id="content" class="section-main">
-        <aside class="side-panel user-info">
+    <section id="content" class="container-wrapper">
+        <aside class="side-panel profile">
             {% set user = ('' | getUsers)[0] %}
-            {{ user | debug }}
-            <picture class="user-info__image">
-                <img src="{{ user.picture.large }}" alt="{{ user.name.first }} {{ user.name.last }}">
-            </picture>
-            <h2>{{ user.name.first }} {{ user.name.last }}</h2>
-            <p>Front-End Engineer intro call</p>
+            <img class="profile__image" src="{{ user.picture.large }}" alt="{{ user.name.first }} {{ user.name.last }}">
+            <h2 class="profile__name">{{ user.name.first }} {{ user.name.last }}</h2>
+            <h1 class="profile__event-title">Front-End Engineer intro call</h1>
         </aside>
-        <div class="main-panel">
+        <section class="main-panel">
+            <h1 class="main-panel__title">Select a Date & Time</h1>
             <form action="#">
                 <input type="hidden" class="calendar">
             </form>
-        </div>
+        </section>
     </section>
 {% endblock %}

@@ -61,6 +61,45 @@ a:active {
     //padding: 0 20px;
 }
 
+.container-wrapper {
+    display: flex;
+}
+
 .side-panel {
-    padding: 25px 0;
+    padding: 25px 10px 25px 30px;
+    width: 40rem;
+}
+
+.profile {
+    &__image {
+        border-radius: 50%;
+        display: block;
+        height: 65px;
+        margin-bottom: 10px;
+        width: 65px;
+    }
+
+    &__name {
+        color: rgba($color-body, 0.8);
+        font-size: 16px;
+        font-weight: 600;
+        margin: 1.2em 0 0.2em;
+    }
+
+    &__event-title {
+        color: $color-body;
+        font-size: 32px;
+        font-weight: 600;
+        margin: 0;
+    }
+}
+
+.main-panel {
+    padding: 30px 22px;
+
+    &__title {
+        margin: 0.5rem;
+        font-size: 32px;
+        color: $color-body;
+    }
 }
