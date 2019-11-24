@@ -1,10 +1,10 @@
 import ResponsiveEvent from './responsive-event';
-import Calendar from './calendar';
+import Scheduler from './scheduler';
 
 const event = new ResponsiveEvent();
 
 document.addEventListener('DOMContentLoaded', () => {
-    const calendar = new Calendar();
+    const scheduler = new Scheduler();
 });
 
 window.addEventListener('load', () => {

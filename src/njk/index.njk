@@ -4,7 +4,7 @@
 {% set titlePage = 'Index page' %}
 
 {% block content %}
-    <section id="content" class="container-wrapper">
+    <section id="content" class="container-wrapper scheduler">
         <aside class="side-panel profile">
             {% set user = ('' | getUsers)[0] %}
             <img class="profile__image" src="{{ user.picture.large }}" alt="{{ user.name.first }} {{ user.name.last }}">
@@ -13,9 +13,15 @@
         </aside>
         <section class="main-panel">
             <h1 class="main-panel__title">Select a Date & Time</h1>
-            <form action="#">
-                <input type="hidden" class="calendar">
-            </form>
+            <div class="main-panel__row">
+                <form action="#">
+                    <input type="hidden" class="calendar">
+                </form>
+                <section class="time-panel -is-hidden">
+                    <h2 class="time-panel__title"></h2>
+                    <ul class="time-panel__list"></ul>
+                </section>
+            </div>
         </section>
     </section>
 {% endblock %}

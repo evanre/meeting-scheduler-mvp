@@ -7,6 +7,9 @@ import * as helpers from './helpers';
 export default class Calendar {
     constructor(selector = '.calendar', options = null) {
         this.selector = selector;
+
+        this.checkBeforeInit(options);
+
         this.calendar = null;
 
         // Plugin options
@@ -20,27 +23,28 @@ export default class Calendar {
                 firstDayOfWeek: 1, // start week on Monday
             },
             minDate: 'today',
-            maxDate: new Date().fp_incr(14), // 14 days from now
-            onChange: (selectedDates, dateStr, instance) => {
-                console.log( selectedDates, dateStr, instance );
-            },
+            maxDate: false,
+            onChange: false,
         };
 
         if (options instanceof Object) {
-            this.options = helpers.extendDefaults(this.options, options);
+            this.options = helpers.merge(this.options, options);
         }
 
-        this.checkBeforeInit();
+        this.init();
     }
 
-    checkBeforeInit() {
+    checkBeforeInit(options) {
         if (typeof this.selector === 'string') {
-            [...document.querySelectorAll(this.selector)].forEach((el) => new Calendar(el));
-        } else if (this.selector instanceof Element) {
-            this.init();
-        } else {
+            [...document.querySelectorAll(this.selector)].forEach((el) => new Calendar(el, options));
+            return true;
+        }
+
+        if (!(this.selector instanceof Element)) {
             throw new Error(`${this.selector} should be a DOM Object or string`);
         }
+
+        return false;
     }
 
     init() {

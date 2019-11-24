@@ -95,11 +95,47 @@ a:active {
 }
 
 .main-panel {
-    padding: 30px 22px;
+    padding: 30px;
 
     &__title {
-        margin: 0.5rem;
-        font-size: 32px;
         color: $color-body;
+        font-size: 20px;
+        margin: 0 0.4em;
+    }
+}
+
+.time-panel {
+    &__title {}
+
+    &__list {
+        margin: 0;
+        padding: 0;
+    }
+
+    &__item {
+        display: flex;
+        font-size: 16px;
+        margin-bottom: 10px;
+    }
+
+    &__button {
+        border: 1px solid $color-primary;
+        border-radius: 4px;
+        color: $color-primary;
+        cursor: pointer;
+        display: block;
+        flex-grow: 1;
+        font-weight: 600;
+        height: 52px;
+        outline: 0;
+        padding: 13px 10px;
+        text-align: center;
+        transition: all 0.3s ease;
+        transition-property: width, transform;
+
+        &:hover,
+        &:focus {
+            border-width: 2px;
+        }
     }
 }
