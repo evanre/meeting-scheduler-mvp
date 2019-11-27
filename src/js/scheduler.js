@@ -14,6 +14,8 @@ export default class Scheduler {
 
         this.calendar = null;
         this.timePanel = null;
+        this.previousBtn = null;
+        this.confirmBtn = null;
 
         this.checkBeforeInit(options);
 
@@ -51,8 +53,9 @@ export default class Scheduler {
     init() {
         this.calendar = new Calendar('.calendar', this.options);
         this.timePanel = this.selector.querySelector('.time-panel');
+        this.confirmBtn = Scheduler.createConfirmBtn();
 
-        this.timePanel.addEventListener('click', this.onTtimePanel);
+        this.timePanel.addEventListener('click', this.onTimePanel.bind(this));
     }
 
     dateSelected(selectedDates, dateStr, instance) {
@@ -81,14 +84,15 @@ export default class Scheduler {
         const fragment = document.createDocumentFragment();
         list.forEach((time) => {
             const li = document.createElement('li');
-            li.className = 'time-panel__item';
-            const button = document.createElement('button');
-            button.className = 'time-panel__button';
-            button.setAttribute('type', 'button');
-            button.setAttribute('data-time', time);
-            button.innerText = time;
+            li.setAttribute('class', 'time-panel__item');
+            li.setAttribute('data-time', time);
 
-            li.appendChild(button);
+            const btn = document.createElement('button');
+            btn.className = 'time-panel__button';
+            btn.setAttribute('type', 'button');
+            btn.innerText = time;
+
+            li.appendChild(btn);
 
             return fragment.appendChild(li);
         });
@@ -96,17 +100,31 @@ export default class Scheduler {
         return fragment;
     }
 
-    onTtimePanel(e) {
+    onTimePanel(e) {
         const btn = e.target;
+        const li = btn.parentNode;
 
-        if (!btn.classList.contains('time-panel__button')) {
-            return;
+        if (btn.classList.contains('time-panel__button')) {
+            if (this.previousBtn) {
+                this.previousBtn.parentNode.classList.remove('-is-selected');
+            }
+
+            this.previousBtn = btn;
+
+            li.classList.add('-is-selected');
+            li.appendChild(this.confirmBtn);
+        } else if (btn.classList.contains('time-panel__confirm')) {
+            // move to confirmation page
+            console.log(`Confirm button pressed ${li.getAttribute('data-time')}!`);
         }
+    }
 
-        [...this.timePanel.querySelector('.time-panel__item')].forEach((li) => {
-            li.classList.remove('-is-selected');
-        });
+    static createConfirmBtn() {
+        const btn = document.createElement('button');
+        btn.setAttribute('type', 'button');
+        btn.setAttribute('class', 'time-panel__confirm');
+        btn.innerText = 'Confirm';
 
-        console.log( btn );
+        return btn;
     }
 }

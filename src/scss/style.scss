@@ -38,36 +38,40 @@ a:active {
 }
 
 .container {
-    background-color: #fff;
-    border-radius: 8px;
-    box-shadow: 0 1px 8px 0 rgba(0, 0, 0, 0.08);
-    margin: 40px auto;
-    max-width: 1060px;
-    min-height: 550px;
+    display: flex;
+    flex-direction: column;
+    margin: 0 auto;
+    max-width: 1120px;
+    min-height: 100vh;
+    padding: 40px 30px 30px;
     position: relative;
-    transition: all 0.22s ease-out;
 
-    @include breakpoint(medium down) {
-        max-width: 800px;
-        width: 90%;
+    &-wrapper {
+        background-color: #fff;
+        border-radius: 8px;
+        box-shadow: 0 1px 8px 0 rgba(0, 0, 0, 0.08);
+        display: flex;
+        flex: 1 1 auto;
+        margin: 0 auto;
+        min-height: 550px;
+
+        @include breakpoint(medium down) {
+            display: block;
+            @debug &;
+        }
     }
 }
 
-.flatpickr-input {
-    display: none;
-}
-
-.flatpickr-calendar {
-    //padding: 0 20px;
-}
-
-.container-wrapper {
-    display: flex;
-}
 
 .side-panel {
-    padding: 25px 10px 25px 30px;
-    width: 40rem;
+    padding: 20px;
+    text-align: center;
+
+    @include breakpoint(large) {
+        padding: 25px 10px 25px 30px;
+        text-align: left;
+        width: 37rem;
+    }
 }
 
 .profile {
@@ -77,6 +81,10 @@ a:active {
         height: 65px;
         margin-bottom: 10px;
         width: 65px;
+
+        @include breakpoint(medium down) {
+            margin: 0 auto;
+        }
     }
 
     &__name {
@@ -95,20 +103,80 @@ a:active {
 }
 
 .main-panel {
-    padding: 30px;
+    background-color: #fff;
+    flex-grow: 1;
+    padding: 30px 0 30px 25px;
+
+    @include breakpoint(large) {
+        box-shadow: -3px 0 5px -4px rgba(0, 0, 0, 0.2);
+    }
+
+    @include breakpoint(small down) {
+        padding: 20px;
+    }
+
+    .flatpickr-input {
+        display: none;
+    }
 
     &__title {
         color: $color-body;
         font-size: 20px;
         margin: 0 0.4em;
     }
+
+    &__row {
+        display: flex;
+        height: 100%;
+        width: 100%;
+
+        @include breakpoint(small down) {
+            display: block;
+        }
+    }
+
+    form {
+        padding-right: 15px;
+
+        @include breakpoint(medium down) {
+            margin: 0 auto;
+        }
+
+        @include breakpoint(small down) {
+            padding-right: 0;
+            overflow: auto;
+        }
+    }
 }
 
 .time-panel {
-    &__title {}
+    $this: &;
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+    min-width: 220px;
+    padding-left: 15px;
+
+    @include breakpoint(medium down) {
+        display: block;
+    }
+
+    &.-is-hidden {
+        display: none;
+    }
+
+    &__title {
+        font-size: 16px;
+        font-weight: 400;
+        height: 38px;
+        line-height: 38px;
+        margin: 1.2em 0;
+    }
 
     &__list {
+        flex: 1 1 100px;
         margin: 0;
+        overflow: auto;
         padding: 0;
     }
 
@@ -116,26 +184,72 @@ a:active {
         display: flex;
         font-size: 16px;
         margin-bottom: 10px;
+        margin-right: 30px;
+        overflow: hidden;
+
+        &::after {
+            content: '';
+        }
+
+
+        &.-is-selected {
+            #{$this}__confirm,
+            &::after {
+                transform: translateX(0);
+            }
+        }
     }
 
-    &__button {
-        border: 1px solid $color-primary;
+    &__item::after,
+    &__button,
+    &__confirm {
         border-radius: 4px;
-        color: $color-primary;
         cursor: pointer;
         display: block;
-        flex-grow: 1;
+        flex: 1 0 auto;
         font-weight: 600;
         height: 52px;
         outline: 0;
         padding: 13px 10px;
         text-align: center;
-        transition: all 0.3s ease;
-        transition-property: width, transform;
+        transition: width 0.3s ease;
+    }
+
+    &__button {
+        border: 1px solid $color-primary;
+        color: $color-primary;
+        width: 100%;
 
         &:hover,
         &:focus {
             border-width: 2px;
+        }
+
+        .-is-selected & {
+            background-color: rgba(0, 0, 0, 0.6);
+            border-color: transparent;
+            color: #fff;
+            width: 48.5%;
+        }
+    }
+
+    &__item::after,
+    &__confirm {
+        background-color: $color-primary;
+        border-color: transparent;
+        color: #fff;
+        margin-left: 3%;
+        width: 48.5%;
+    }
+
+    &__confirm {
+        &:hover,
+        &:focus {
+            background-color: rgba($color-primary, 0.5);
+        }
+
+        &:active {
+            background-color: $color-primary;
         }
     }
 }
